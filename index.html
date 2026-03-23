@@ -1,1 +1,624 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El Guapo Taco — Authentic Street Tacos · Las Cruces & El Paso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Lato:wght@300;400;700&family=Satisfy&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cream:#F5EDD6;--tan:#E2C98A;--rust:#C0502A;--dark-rust:#8A2D0A;
+      --brown:#3E2009;--charcoal:#111008;--sage:#7A8C5C;--light-sage:#C2CBB0;--blue:#3B8FC4;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--brown);overflow-x:hidden}
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+ 
+    /* ── NAV ── */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:500;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 48px;background:rgba(17,16,8,0.96);
+      backdrop-filter:blur(8px);border-bottom:2px solid var(--rust);
+    }
+    .nav-logo img{height:42px;width:auto;filter:invert(1) brightness(1.8)}
+    .nav-links{display:flex;gap:28px;list-style:none;align-items:center}
+    .nav-links a{
+      font-weight:700;font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;
+      color:var(--cream);text-decoration:none;position:relative;transition:color .3s;
+    }
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--rust);transition:width .3s}
+    .nav-links a:hover{color:var(--tan)}
+    .nav-links a:hover::after{width:100%}
+    .nav-divider{width:1px;height:20px;background:rgba(226,201,138,.2);flex-shrink:0}
+    .nav-social{display:flex;gap:14px;align-items:center}
+    .nav-social a{color:rgba(245,237,214,.55);transition:color .3s;display:flex;align-items:center}
+    .nav-social a:hover{color:var(--rust)}
+ 
+    /* ── HERO ── */
+    #hero{
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      text-align:center;padding:120px 24px 80px;
+      position:relative;overflow:hidden;background:var(--charcoal);
+    }
+    .hero-bg{
+      position:absolute;inset:0;
+      background-image:url('https://i.ibb.co/8g5RpF4P/fresh-tacos.webp');
+      background-size:cover;background-position:center 40%;
+      filter:brightness(.25) saturate(.75);transform:scale(1.04);
+    }
+    .hero-content{position:relative;z-index:2}
+    .hero-main-logo{
+      width:min(500px,82vw);margin-bottom:30px;
+      filter:invert(1) brightness(1.8) drop-shadow(0 2px 20px rgba(0,0,0,.5));
+      opacity:0;animation:fadeUp .9s .2s forwards;
+    }
+    .hero-divider{
+      width:140px;height:2px;
+      background:linear-gradient(to right,transparent,var(--tan),transparent);
+      margin:0 auto 24px;opacity:0;animation:fadeUp .8s .5s forwards;
+    }
+    .hero-sub{
+      font-size:.95rem;font-weight:300;color:var(--light-sage);
+      letter-spacing:3px;text-transform:uppercase;
+      opacity:0;animation:fadeUp .8s .7s forwards;
+    }
+    .hero-cta{
+      margin-top:44px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+      opacity:0;animation:fadeUp .8s .9s forwards;
+    }
+    .btn{
+      font-family:'Lato',sans-serif;font-weight:700;font-size:.72rem;
+      letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;
+      padding:15px 34px;border-radius:2px;transition:all .3s;cursor:pointer;border:none;
+    }
+    .btn-primary{background:var(--rust);color:var(--cream)}
+    .btn-primary:hover{background:var(--dark-rust);transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,80,42,.45)}
+    .btn-outline{background:transparent;color:var(--cream);border:2px solid var(--tan)}
+    .btn-outline:hover{background:var(--tan);color:var(--brown);transform:translateY(-2px)}
+    .scroll-hint{
+      position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      opacity:0;animation:fadeUp .8s 1.3s forwards;
+    }
+    .scroll-hint span{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--tan)}
+    .scroll-arrow{width:17px;height:17px;border-right:2px solid var(--tan);border-bottom:2px solid var(--tan);transform:rotate(45deg);animation:bounce 1.6s infinite}
+ 
+    /* ── SECTIONS ── */
+    section{padding:96px 24px}
+    .section-inner{max-width:1100px;margin:0 auto}
+    .section-label{font-family:'Satisfy',cursive;font-size:1rem;color:var(--rust);letter-spacing:2px;display:block;margin-bottom:10px;text-align:center}
+    .section-title{font-family:'Rye',serif;font-size:clamp(1.9rem,5vw,3rem);color:var(--brown);text-align:center;letter-spacing:2px;line-height:1.2}
+    .section-title.light{color:var(--cream)}
+    .title-rule{display:flex;align-items:center;gap:14px;margin:18px auto 52px;max-width:300px;justify-content:center}
+    .title-rule::before,.title-rule::after{content:'';flex:1;height:1px;background:var(--tan)}
+    .title-rule.dark::before,.title-rule.dark::after{background:rgba(226,201,138,.25)}
+    .title-rule .icon{font-size:1.1rem;color:var(--rust)}
+ 
+    /* ── ABOUT ── */
+    #about{background:var(--charcoal)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+    .about-img-wrap{position:relative}
+    .about-img-wrap img.main-photo{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:2px;display:block}
+    .about-img-wrap::after{content:'';position:absolute;top:18px;left:18px;right:-18px;bottom:-18px;border:2px solid var(--rust);z-index:-1;border-radius:2px}
+    .about-badge{position:absolute;bottom:-20px;right:-20px;width:110px;height:110px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 4px 12px rgba(0,0,0,.7))}
+    .about-text .highlight{font-family:'Satisfy',cursive;font-size:1.55rem;color:var(--tan);line-height:1.6;display:block;margin-bottom:22px}
+    .about-text p{color:rgba(245,237,214,.72);font-size:1rem;line-height:1.9;margin-bottom:16px;font-weight:300}
+    .about-stats{display:flex;gap:32px;margin-top:36px;padding-top:36px;border-top:1px solid rgba(226,201,138,.18)}
+    .stat{text-align:center}
+    .stat-num{font-family:'Rye',serif;font-size:1.8rem;color:var(--rust);display:block}
+    .stat-label{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(245,237,214,.42)}
+ 
+    /* ── MENU ── */
+    #menu{background:var(--cream)}
+    .menu-note{text-align:center;font-size:.8rem;color:var(--sage);letter-spacing:1px;margin-bottom:52px;margin-top:-32px}
+    .menu-categories{display:flex;flex-direction:column;gap:64px}
+    .menu-cat-header{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+    .menu-cat-title{font-family:'Rye',serif;font-size:1.3rem;color:var(--rust);letter-spacing:2px;white-space:nowrap}
+    .menu-cat-line{flex:1;height:1px;background:var(--tan)}
+    .menu-section-body{display:grid;grid-template-columns:280px 1fr;gap:40px;align-items:start}
+    .menu-section-body.reverse{grid-template-columns:1fr 280px}
+    .menu-section-photo{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px;display:block;box-shadow:0 8px 28px rgba(62,32,9,.15)}
+    .menu-section-body.reverse .menu-section-photo{order:2}
+    .menu-section-body.reverse .menu-items-list{order:1}
+    .menu-items-list{display:flex;flex-direction:column}
+    .menu-item{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(226,201,138,.4)}
+    .menu-item:last-child{border-bottom:none}
+    .menu-item-left{flex:1;padding-right:16px}
+    .menu-item-name{font-family:'Rye',serif;font-size:.92rem;color:var(--brown);letter-spacing:.5px;margin-bottom:5px}
+    .menu-item-desc{font-size:.82rem;color:#7a6a58;line-height:1.65}
+    .menu-item-price{font-family:'Satisfy',cursive;font-size:1.15rem;color:var(--rust);white-space:nowrap;padding-top:2px}
+    .menu-tag{display:inline-block;font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-top:6px;background:rgba(122,140,92,.1);color:var(--sage);border:1px solid rgba(122,140,92,.3)}
+    .menu-tag.hot{background:rgba(192,80,42,.08);color:var(--rust);border-color:rgba(192,80,42,.25)}
+    .menu-tag.sig{background:rgba(59,143,196,.08);color:var(--blue);border-color:rgba(59,143,196,.25)}
+ 
+    /* Cheesecake section */
+    .cheesecake-photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:32px}
+    .cheesecake-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;display:block;box-shadow:0 8px 28px rgba(62,32,9,.15)}
+    .cheesecake-coming-soon{
+      text-align:center;padding:32px;
+      background:linear-gradient(135deg,rgba(180,100,140,.08),rgba(226,201,138,.1));
+      border:1px dashed rgba(180,100,140,.35);border-radius:2px;margin-bottom:28px;
+    }
+    .cheesecake-coming-soon p{font-family:'Satisfy',cursive;font-size:1.2rem;color:#b05080;margin-bottom:8px}
+    .cheesecake-coming-soon span{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:#a07090}
+    .flavor-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}
+    .flavor-pill{
+      font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;
+      padding:10px 20px;border:1px solid rgba(180,100,140,.3);
+      color:#b05080;border-radius:2px;background:rgba(180,100,140,.06);transition:all .3s;
+    }
+    .flavor-pill:hover{background:rgba(180,100,140,.15);border-color:#b05080}
+ 
+    /* ── GALLERY ── */
+    .gallery-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+    .gallery-strip img{width:100%;aspect-ratio:1;object-fit:cover;display:block;transition:transform .4s,filter .4s;filter:saturate(.82)}
+    .gallery-strip img:hover{transform:scale(1.05);filter:saturate(1.15)}
+ 
+    /* ── CATERING ── */
+    #catering{background:var(--charcoal);background-image:repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(192,80,42,.04) 28px,rgba(192,80,42,.04) 29px)}
+    .catering-intro{text-align:center;max-width:700px;margin:0 auto 56px;font-size:1rem;line-height:1.95;color:rgba(245,237,214,.68);font-weight:300}
+    .catering-services{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:64px}
+    .service-pill{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:10px 22px;border:1px solid rgba(226,201,138,.25);color:var(--tan);border-radius:2px;transition:all .3s}
+    .service-pill:hover{background:rgba(192,80,42,.15);border-color:var(--rust)}
+    .catering-packages{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:72px}
+    .pkg-card{border:1px solid rgba(226,201,138,.18);padding:32px 24px;transition:border-color .3s,background .3s}
+    .pkg-card:hover{border-color:var(--rust);background:rgba(192,80,42,.06)}
+    .pkg-card-icon{font-size:2rem;display:block;margin-bottom:16px}
+    .pkg-card-title{font-family:'Rye',serif;font-size:.95rem;color:var(--tan);letter-spacing:1px;margin-bottom:8px}
+    .pkg-card-price{font-family:'Satisfy',cursive;font-size:1.2rem;color:var(--rust);display:block;margin-bottom:12px}
+    .pkg-card p{font-size:.82rem;line-height:1.75;color:rgba(245,237,214,.48)}
+    .pkg-card ul{list-style:none;margin-top:10px}
+    .pkg-card ul li{font-size:.78rem;color:rgba(245,237,214,.5);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+    .pkg-card ul li::before{content:"—";color:var(--rust);flex-shrink:0}
+    .catering-showcase{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:72px}
+    .catering-showcase img{width:100%;aspect-ratio:1/1.05;object-fit:cover;border-radius:2px;display:block}
+    .serving-banner{text-align:center;padding:24px;border:1px solid rgba(226,201,138,.2);margin-bottom:64px}
+    .serving-banner p{font-family:'Satisfy',cursive;font-size:1.3rem;color:var(--tan)}
+ 
+    /* Call CTA */
+    .call-cta{
+      max-width:700px;margin:0 auto;text-align:center;
+      border:1px solid rgba(226,201,138,.2);padding:60px 44px;
+      background:rgba(245,237,214,.03);
+    }
+    .call-cta-icon{font-size:3rem;display:block;margin-bottom:20px}
+    .call-cta h3{font-family:'Rye',serif;font-size:1.6rem;color:var(--cream);letter-spacing:2px;margin-bottom:16px}
+    .call-cta p{font-size:.95rem;line-height:1.9;color:rgba(245,237,214,.6);margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto}
+    .call-number{
+      display:inline-flex;align-items:center;gap:14px;
+      font-family:'Rye',serif;font-size:1.9rem;color:var(--tan);
+      text-decoration:none;letter-spacing:2px;
+      padding:22px 44px;border:2px solid var(--rust);
+      transition:all .3s;border-radius:2px;
+    }
+    .call-number:hover{background:var(--rust);color:var(--cream);transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,80,42,.4)}
+    .call-note{margin-top:24px;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(245,237,214,.3)}
+ 
+    /* ── FIND US ── */
+    #contact{background:#EFE5C8}
+    .truck-reveal{position:relative;margin-bottom:64px;border-radius:2px;overflow:hidden}
+    .truck-reveal img{width:100%;max-height:430px;object-fit:cover;object-position:center 55%;display:block}
+    .truck-reveal-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(17,16,8,.65) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:center;padding:48px}
+    .truck-reveal-overlay h3{font-family:'Rye',serif;font-size:clamp(1.4rem,4vw,2.4rem);color:var(--cream);letter-spacing:2px;line-height:1.3;margin-bottom:12px}
+    .truck-reveal-overlay p{font-size:.88rem;color:rgba(245,237,214,.7);letter-spacing:1px;max-width:340px;line-height:1.7}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+    .contact-block h3{font-family:'Rye',serif;font-size:1.1rem;color:var(--brown);letter-spacing:1px;margin-bottom:22px}
+    .contact-item{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+    .contact-icon{font-size:1.2rem;margin-top:2px}
+    .contact-item-text{font-size:.86rem;line-height:1.7;color:#6a5a48}
+    .contact-item-text strong{display:block;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--rust);margin-bottom:3px}
+    .social-row{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap}
+    .social-link-full{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--tan);color:var(--brown);text-decoration:none;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all .3s;border-radius:2px}
+    .social-link-full:hover{background:var(--rust);border-color:var(--rust);color:white;transform:translateY(-2px)}
+    .locations-list{display:flex;flex-direction:column;gap:16px}
+    .location-card{background:white;border-left:4px solid var(--rust);padding:18px 22px;border-radius:0 2px 2px 0;box-shadow:0 2px 10px rgba(62,32,9,.07)}
+    .location-card .day{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:4px}
+    .location-card .spot{font-family:'Rye',serif;font-size:.88rem;color:var(--brown);margin-bottom:3px}
+    .location-card .time{font-size:.78rem;color:#8a7a68}
+    .follow-note{font-size:.76rem;color:#8a7a68;margin-top:16px;padding:14px 16px;background:white;border-radius:2px;border:1px dashed var(--tan);line-height:1.7}
+ 
+    /* ── FOOTER ── */
+    footer{background:var(--charcoal);padding:52px 24px;text-align:center;border-top:3px solid var(--rust)}
+    .footer-top{display:flex;align-items:center;justify-content:center;gap:32px;margin-bottom:20px;flex-wrap:wrap}
+    .footer-main-logo{height:42px;width:auto;filter:invert(1) brightness(1.8)}
+    .footer-second-logo{height:80px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+    .footer-tagline{font-family:'Satisfy',cursive;color:var(--sage);font-size:.9rem;margin-bottom:16px}
+    .footer-copy{font-size:.7rem;letter-spacing:1.5px;color:rgba(245,237,214,.2)}
+ 
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes bounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(6px)}}
+ 
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){
+      nav{padding:12px 20px}
+      .nav-links{gap:16px}
+      .nav-social{display:none}
+      .nav-divider{display:none}
+      .about-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
+      .menu-section-body,.menu-section-body.reverse{grid-template-columns:1fr}
+      .menu-section-photo{max-height:260px;aspect-ratio:16/9}
+      .menu-section-body.reverse .menu-section-photo,.menu-section-body.reverse .menu-items-list{order:0}
+      .catering-packages{grid-template-columns:1fr}
+      .catering-showcase{grid-template-columns:1fr}
+      .gallery-strip{grid-template-columns:repeat(2,1fr)}
+      .truck-reveal-overlay{padding:28px}
+      .cheesecake-photos{grid-template-columns:1fr}
+      .call-cta{padding:40px 24px}
+      .call-number{font-size:1.4rem;padding:18px 28px}
+    }
+    @media(max-width:560px){.nav-links{display:none}}
+  </style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <a href="#hero" style="display:flex;align-items:center">
+    <img src="https://i.ibb.co/3mNcmXFk/El-Guapo-Taco-logo-transparent.png" alt="El Guapo Taco" style="height:42px;width:auto;filter:invert(1) brightness(1.8)" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#catering">Catering</a></li>
+    <li><a href="#contact">Find Us</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li class="nav-social">
+      <a href="https://instagram.com/elguapo_tacolc" target="_blank" title="Instagram">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a href="https://facebook.com/ElGuapoTaco" target="_blank" title="Facebook">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="https://tiktok.com/@elguapotacolc" target="_blank" title="TikTok">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+      </a>
+    </li>
+  </ul>
+</nav>
+ 
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <img class="hero-main-logo" src="https://i.ibb.co/3mNcmXFk/El-Guapo-Taco-logo-transparent.png" alt="El Guapo Taco" />
+    <div class="hero-divider"></div>
+    <p class="hero-sub">Authentic Street Tacos · Las Cruces, NM &amp; El Paso, TX</p>
+    <div class="hero-cta">
+      <a href="#menu" class="btn btn-primary">See the Menu</a>
+      <a href="#catering" class="btn btn-outline">Book Us for Your Event</a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-arrow"></div></div>
+</section>
+ 
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <span class="section-label">Who We Are</span>
+    <h2 class="section-title light">Our Story</h2>
+    <div class="title-rule dark"><span class="icon">🌮</span></div>
+    <div class="about-grid">
+      <div class="about-img-wrap">
+        <img class="main-photo" src="https://i.ibb.co/zW6NtcLw/Mom-and-Dad.jpg" alt="The family behind El Guapo Taco" />
+        <img class="about-badge" src="https://i.ibb.co/hxdL84h8/Second-logo-transparent.png" alt="Tacos de Vatos" />
+      </div>
+      <div class="about-text">
+        <span class="highlight">"Good food doesn't need a fancy address."</span>
+        <p>El Guapo Taco is a family-run taco truck born from a deep love of bold, authentic flavors and the belief that the best food is made with heart — and served straight to the streets. Based out of Canutillo, TX, we proudly serve the communities of Las Cruces, NM and El Paso, TX.</p>
+        <p>Every taco, every tray, every plate we put out carries the spirit of family tradition. Whether you spot our blue truck at one of our regular spots or book us for your next big event, you're getting the real deal — made fresh, made bold, made with love.</p>
+        <div class="about-stats">
+          <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Fresh Daily</span></div>
+          <div class="stat"><span class="stat-num">★ 5</span><span class="stat-label">Star Reviews</span></div>
+          <div class="stat"><span class="stat-num">2 Cities</span><span class="stat-label">Served with Pride</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- MENU -->
+<section id="menu">
+  <div class="section-inner">
+    <span class="section-label">What We're Serving</span>
+    <h2 class="section-title">The Menu</h2>
+    <div class="title-rule"><span class="icon">🔥</span></div>
+    <p class="menu-note">* All items made fresh to order. Menu subject to change — follow us on social for daily specials!</p>
+    <div class="menu-categories">
+ 
+      <!-- TACOS -->
+      <div>
+        <div class="menu-cat-header"><h3 class="menu-cat-title">Tacos</h3><div class="menu-cat-line"></div></div>
+        <div class="menu-section-body">
+          <img class="menu-section-photo" src="https://i.ibb.co/8g5RpF4P/fresh-tacos.webp" alt="El Guapo Tacos" />
+          <div class="menu-items-list">
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Original Guapo Taco</div>
+                <div class="menu-item-desc">Al pastor-style marinated pork with pineapple, onions and cilantro. The taco that started it all.</div>
+                <span class="menu-tag sig">⭐ The Original</span>
+              </div>
+              <div class="menu-item-price">$12</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Quesabirria Tacos</div>
+                <div class="menu-item-desc">Slow-braised birria tacos with melted mozzarella, onion, cilantro and limes. Served with rich consommé for dipping.</div>
+                <span class="menu-tag sig">⭐ Fan Favorite</span>
+              </div>
+              <div class="menu-item-price">$15</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Three Crosses Taco</div>
+                <div class="menu-item-desc">Our boldest taco — quesabirria loaded with a bacon-wrapped jalapeño popper inside. Not for the faint of heart.</div>
+                <span class="menu-tag hot">🌶 Signature Fire</span>
+              </div>
+              <div class="menu-item-price">$6 each</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- GRILLED CHEESE -->
+      <div>
+        <div class="menu-cat-header"><h3 class="menu-cat-title">Grilled Cheese</h3><div class="menu-cat-line"></div></div>
+        <div class="menu-section-body reverse">
+          <img class="menu-section-photo" src="https://i.ibb.co/20T4c9SC/Griied-Cheese.jpg" alt="El Guapo Grilled Cheese" />
+          <div class="menu-items-list">
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Cheese</div><div class="menu-item-desc">Classic melted cheese on a griddled tortilla. Simple and perfect.</div></div>
+              <div class="menu-item-price">$6</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Birria de Res</div>
+                <div class="menu-item-desc">Slow-braised beef birria melted into a crispy grilled cheese. Rich, savory, and deeply satisfying.</div>
+                <span class="menu-tag sig">⭐ Must Try</span>
+              </div>
+              <div class="menu-item-price">$10</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Three Crosses Grilled Cheese</div>
+                <div class="menu-item-desc">Birria de Res grilled cheese packed with bacon-wrapped jalapeño poppers inside. Our most legendary creation.</div>
+                <span class="menu-tag hot">🌶 Legend</span>
+              </div>
+              <div class="menu-item-price">$13</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- NACHOS -->
+      <div>
+        <div class="menu-cat-header"><h3 class="menu-cat-title">Nachos</h3><div class="menu-cat-line"></div></div>
+        <div class="menu-section-body">
+          <img class="menu-section-photo" src="https://i.ibb.co/d0Gjc258/Nachos.jpg" alt="El Guapo Nachos" />
+          <div class="menu-items-list">
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Birria de Res Nachos — Full</div>
+                <div class="menu-item-desc">Your choice of meat on tostadas, topped with scratch-made chile con queso, onions, cilantro and pickled jalapeños.</div>
+                <span class="menu-tag sig">⭐ Full Tray</span>
+              </div>
+              <div class="menu-item-price">$16</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Birria de Res Nachos — Half</div>
+                <div class="menu-item-desc">Same incredible scratch-made nachos, half portion. Perfect for one.</div>
+              </div>
+              <div class="menu-item-price">$10</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- QUESADILLAS -->
+      <div>
+        <div class="menu-cat-header"><h3 class="menu-cat-title">Quesadillas</h3><div class="menu-cat-line"></div></div>
+        <div class="menu-section-body reverse">
+          <img class="menu-section-photo" src="https://i.ibb.co/rGLH71qS/taco-heven.webp" alt="Quesadillas" />
+          <div class="menu-items-list">
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Cheese Quesadilla</div><div class="menu-item-desc">Warm flour tortilla with melted cheese. A classic done right.</div></div>
+              <div class="menu-item-price">$7</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Birria de Res Quesadilla</div><div class="menu-item-desc">Slow-braised birria beef in a crispy flour tortilla with melted cheese. Served with consommé.</div></div>
+              <div class="menu-item-price">$12</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">The Pizzadilla</div>
+                <div class="menu-item-desc">Three 12-inch flour tortillas stacked with birria, mozzarella, onions, cilantro, limes and consommé. An experience.</div>
+                <span class="menu-tag sig">⭐ Showstopper</span>
+              </div>
+              <div class="menu-item-price">$25</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">Birria Ramen</div>
+                <div class="menu-item-desc">Ramen noodles swimming in our rich birria consommé. A one-of-a-kind fusion bowl.</div>
+                <span class="menu-tag hot">🔥 Unique</span>
+              </div>
+              <div class="menu-item-price">$10</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- SIDES & EXTRAS -->
+      <div>
+        <div class="menu-cat-header"><h3 class="menu-cat-title">Sides &amp; Extras</h3><div class="menu-cat-line"></div></div>
+        <div class="menu-section-body">
+          <img class="menu-section-photo" src="https://i.ibb.co/ZRct5DHm/jalopeno-popers.jpg" alt="Jalapeño Poppers" />
+          <div class="menu-items-list">
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">4 Bacon Wrapped Jalapeños</div><div class="menu-item-desc">Fresh jalapeños stuffed with cream cheese, wrapped in crispy bacon and grilled flat-top perfect.</div><span class="menu-tag hot">🔥 Crowd Favorite</span></div>
+              <div class="menu-item-price">$11</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Chips &amp; Queso</div><div class="menu-item-desc">Warm tortilla chips with our scratch-made chile con queso.</div></div>
+              <div class="menu-item-price">$10</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Chips &amp; Salsa</div><div class="menu-item-desc">Crispy chips with house-made salsa. Simple, fresh, delicious.</div></div>
+              <div class="menu-item-price">$5</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Frijoles Charros</div><div class="menu-item-desc">Smoky, slow-cooked pinto beans with bacon and spices. The real deal.</div></div>
+              <div class="menu-item-price">$4</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left"><div class="menu-item-name">Add Guac</div><div class="menu-item-desc">Fresh house-made guacamole added to any item.</div></div>
+              <div class="menu-item-price">$1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- CHEESECAKE TACOS -->
+      <div>
+        <div class="menu-cat-header"><h3 class="menu-cat-title">Cheesecake Tacos</h3><div class="menu-cat-line"></div></div>
+        <div class="cheesecake-photos">
+          <img src="https://i.ibb.co/jZw1CnvT/Cheese-cake-tacos.jpg" alt="El Guapo Cheesecake Tacos" />
+          <img src="https://i.ibb.co/W4k4tjqB/Cheese-cake-tacos-2.jpg" alt="El Guapo Cheesecake Tacos flavors" />
+        </div>
+        <div class="cheesecake-coming-soon">
+          <p>🍰 Something Sweet is Coming</p>
+          <span>Prices coming soon — stay tuned on our socials!</span>
+        </div>
+        <div class="flavor-grid">
+          <div class="flavor-pill">🫐 Blueberry</div>
+          <div class="flavor-pill">🍒 Cherry</div>
+          <div class="flavor-pill">🍓 Strawberry</div>
+          <div class="flavor-pill">🐢 Pecan Turtle</div>
+          <div class="flavor-pill">🍪 Oreo</div>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</section>
+ 
+<!-- GALLERY STRIP -->
+<div class="gallery-strip">
+  <img src="https://i.ibb.co/V0P35HvS/taco-heart-2.webp" alt="Taco heart platter" />
+  <img src="https://i.ibb.co/tP2r7ndd/taco-heart.webp"   alt="Taco heart arrangement" />
+  <img src="https://i.ibb.co/yc6jrWCY/beer-tray.webp"    alt="Shrimp and beer tray" />
+  <img src="https://i.ibb.co/C53VF1wv/cheff-makin-fire.jpg" alt="Chef cooking" />
+</div>
+ 
+<!-- CATERING -->
+<section id="catering">
+  <div class="section-inner">
+    <span class="section-label">Events &amp; Catering</span>
+    <h2 class="section-title light">Book El Guapo</h2>
+    <div class="title-rule dark"><span class="icon">🎉</span></div>
+    <p class="catering-intro">Savor every moment with our Catering Services! From exquisite cuisine with the flavors of the Southwest to impeccable service, we bring our very heart and soul to your special occasion — with recipes rooted in family tradition. Let us elevate your event with culinary excellence and unforgettable experiences.</p>
+    <div class="serving-banner"><p>📍 Proudly Serving Las Cruces, NM &amp; El Paso, TX</p></div>
+    <div class="catering-services">
+      <div class="service-pill">🍽 Event Catering</div>
+      <div class="service-pill">🔥 On-Site Catering</div>
+      <div class="service-pill">📦 Drop-Off Catering</div>
+      <div class="service-pill">🏢 Corporate Catering</div>
+      <div class="service-pill">⭐ Specialty Catering</div>
+      <div class="service-pill">🌮 Taquero Services</div>
+    </div>
+    <div class="catering-showcase">
+      <img src="https://i.ibb.co/V0P35HvS/taco-heart-2.webp" alt="Taco catering display" />
+      <img src="https://i.ibb.co/tP2r7ndd/taco-heart.webp"   alt="Event taco tray" />
+    </div>
+    <div class="catering-packages">
+      <div class="pkg-card"><span class="pkg-card-icon">🌮</span><div class="pkg-card-title">Enchilada Bar</div><span class="pkg-card-price">$10 / person</span><p>25 person minimum</p><ul><li>Red and/or Green Cheese Enchiladas</li><li>Beans &amp; Rice &amp; Rolls</li><li>Add Chicken +$2/person</li></ul></div>
+      <div class="pkg-card"><span class="pkg-card-icon">🛒</span><div class="pkg-card-title">Taquero Cart</div><span class="pkg-card-price">$12 / guest</span><p>30 guest min · +$200 booking fee</p><ul><li>Propane, Travel &amp; Setup included</li><li>Choice of 1–3 Taco Cart Menu Items</li><li>Additional items at extra cost</li></ul></div>
+      <div class="pkg-card"><span class="pkg-card-icon">🧀</span><div class="pkg-card-title">Nacho Bar</div><span class="pkg-card-price">$10 / person</span><p>25 person minimum</p><ul><li>Tostadas, Chile con Queso, Sour Cream</li><li>2 Salsas, Onions, Cilantro, Jalapeños &amp; Limes</li><li>Choice of Birria, Asada, Al Pastor or Pollo Asado</li></ul></div>
+      <div class="pkg-card"><span class="pkg-card-icon">🦐</span><div class="pkg-card-title">Ceviche &amp; Aguachiles</div><span class="pkg-card-price">From $65</span><p></p><ul><li>Small Tray — $65</li><li>Large Tray — $110</li></ul></div>
+      <div class="pkg-card"><span class="pkg-card-icon">✉️</span><div class="pkg-card-title">Taco Numbers &amp; Letters</div><span class="pkg-card-price">Inquire for Estimate</span><p>Custom taco art for birthdays, quinceañeras, anniversaries and more.</p></div>
+      <div class="pkg-card" style="border-color:rgba(192,80,42,.35);background:rgba(192,80,42,.05)"><span class="pkg-card-icon">📞</span><div class="pkg-card-title">Custom Package</div><span class="pkg-card-price">Let's Talk</span><p>Have something specific in mind? We'll build the perfect package for your event, budget, and guests.</p></div>
+    </div>
+ 
+    <!-- CALL CTA -->
+    <div class="call-cta">
+      <span class="call-cta-icon">📞</span>
+      <h3>Ready to Book?</h3>
+      <p>Skip the forms — just give us a call or send us a text and we'll get your event set up the right way. We'd love to hear about what you have in mind.</p>
+      <a href="tel:5753394983" class="call-number">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.37 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        575-339-4983
+      </a>
+      <p class="call-note">Call or text us anytime · We'll get back to you fast</p>
+    </div>
+  </div>
+</section>
+ 
+<!-- FIND US -->
+<section id="contact">
+  <div class="section-inner">
+    <span class="section-label">Come Find Us</span>
+    <h2 class="section-title">Spot the Blue Truck</h2>
+    <div class="title-rule"><span class="icon">📍</span></div>
+    <div class="truck-reveal">
+      <img src="https://i.ibb.co/4Rvgb6CJ/the-taco-truck.jpg" alt="The El Guapo Taco blue truck" />
+      <div class="truck-reveal-overlay">
+        <h3>Look for the<br/>Blue Truck</h3>
+        <p>When you see it, you'll know good food is close. Follow us on social for real-time locations.</p>
+      </div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-block">
+        <h3>Our Location</h3>
+        <div class="locations-list">
+          <div class="location-card">
+            <div class="day">Home Base</div>
+            <div class="spot">6740 Doniphan, Canutillo TX</div>
+            <div class="time">Serving Las Cruces, NM &amp; El Paso, TX</div>
+          </div>
+        </div>
+        <div class="follow-note">📲 <strong>Follow us on social media</strong> for real-time location updates, pop-up spots, daily specials and more — so you never miss the truck!</div>
+      </div>
+      <div class="contact-block">
+        <h3>Get in Touch</h3>
+        <div class="contact-item"><span class="contact-icon">📞</span><div class="contact-item-text"><strong>Phone / Text</strong>575-339-4983</div></div>
+        <div class="contact-item"><span class="contact-icon">📍</span><div class="contact-item-text"><strong>Address</strong>6740 Doniphan, Canutillo, TX</div></div>
+        <div class="social-row">
+          <a href="https://instagram.com/elguapo_tacolc" target="_blank" class="social-link-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>@elguapo_tacolc</a>
+          <a href="https://facebook.com/ElGuapoTaco" target="_blank" class="social-link-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>El Guapo Taco</a>
+          <a href="https://tiktok.com/@elguapotacolc" target="_blank" class="social-link-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>@elguapotacolc</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <img class="footer-main-logo" src="https://i.ibb.co/3mNcmXFk/El-Guapo-Taco-logo-transparent.png" alt="El Guapo Taco" />
+    <img class="footer-second-logo" src="https://i.ibb.co/hxdL84h8/Second-logo-transparent.png" alt="Tacos de Vatos" />
+  </div>
+  <p class="footer-tagline">Handcrafted with love. Served on the street.</p>
+  <p class="footer-copy">© 2025 El Guapo Taco · Canutillo, TX · Proudly Serving Las Cruces, NM &amp; El Paso, TX · All Rights Reserved</p>
+</footer>
+ 
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, {threshold:0.08});
+  document.querySelectorAll('.menu-item,.pkg-card,.location-card,.about-text,.catering-showcase,.service-pill,.flavor-pill').forEach(el => {
+    el.style.opacity='0'; el.style.transform='translateY(20px)';
+    el.style.transition='opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
+ 
